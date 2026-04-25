@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="/storage/emulated/0/Documents/Tap Engine/project/Game/tap_lesson/Node.gd" type="Script" id=1]
+
+[sub_resource type="Animation" id=1]
+resource_name = "idle"
+
+[node name="Node" type="Node"]
+script = ExtResource( 1 )
+
+[node name="TileMap" type="TileMap" parent="."]
+format = 1
+
+[node name="Button" type="Button" parent="."]
+margin_right = 81.0
+margin_bottom = 35.0
+text = "Text"
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 108, 0 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 60.0
+margin_right = 40.0
+margin_bottom = 100.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/idle = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+
+[node name="Particles2D" type="Particles2D" parent="."]
