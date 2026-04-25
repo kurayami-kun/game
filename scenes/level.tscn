@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/tank.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/joystick.tscn" type="PackedScene" id=2]
+[ext_resource path="res://brick.svg" type="Texture" id=4]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends KinematicBody2D
+
+var speed = 400
+var velocity = Vector2.ZERO
+onready var right_joystick = $\"../right_joystick\"
+onready var left_joystick = $\"../left_joystick\"
+onready var body = $body
+onready var gun = $gun
+onready var body_collision = $body_collision
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta):
+	var vector = left_joystick.output
+	velocity = vector * speed
+	var angel_diff = Vector2.RIGHT.rotated(self.rotation).angle_to(vector)
+	
+	if abs(angel_diff) < 0.3:
+		#var acceleration = 1 - (angel_diff/0.2)
+		move_and_slide(velocity)
+	
+	if velocity != Vector2.ZERO:
+		self.rotation = lerp_angle(rotation, vector.angle(), 0.15)
+	
+	if right_joystick.output != Vector2.ZERO:
+		gun.rotation = lerp_angle(gun.rotation, right_joystick.output.angle() - self.rotation,0.3)
+	else: gun.rotation = lerp_angle(gun.rotation, 0, 0.1)
+	
+	body_collision.rotation = body.rotation
+	#gun_collision.rotation = gun.rotation
+"
+
+[sub_resource type="RectangleShape2D" id=2]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="tank" parent="." instance=ExtResource( 1 )]
+position = Vector2( 318, 146 )
+script = SubResource( 3 )
+
+[node name="right_joystick" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1052.81, 516.18 )
+
+[node name="left_joystick" parent="." instance=ExtResource( 2 )]
+position = Vector2( 240, 496 )
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2( 654.247, 496.125 )
+scale = Vector2( 0.359776, 0.359776 )
+mass = 50.0
+gravity_scale = 0.0
+linear_damp = 20.0
+angular_damp = 20.0
+
+[node name="Sprite" type="Sprite" parent="RigidBody2D"]
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+scale = Vector2( 10.6034, 7.90194 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 640, 360 )
+current = true
